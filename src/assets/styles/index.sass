@@ -1,0 +1,180 @@
+/* ===========================================
+	        Tic Tac Toe Style Sheet
+	          By: Ariel Gelbard
+	          October 16, 2014
+============================================ */
+
+/* ===========================================
+	          Reset Style Sheet
+============================================ */
+
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+
+/* ===========================================
+	          Declerations
+============================================ */
+
+//===========================================
+//	         	 Mixins
+//============================================
+@mixin noselect() { //disables tile from being selected
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+@mixin tileBackground($colour){ //mixin for creating tile backgrounds
+	background: #ffffff; /* Old browsers */
+	background: -moz-radial-gradient(center, ellipse cover, #ffffff 0%, $colour 93%); /* FF3.6+ */
+	background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,#ffffff), color-stop(93%,$colour)); /* Chrome,Safari4+ */
+	background: -webkit-radial-gradient(center, ellipse cover, #ffffff 0%,$colour 93%); /* Chrome10+,Safari5.1+ */
+	background: -o-radial-gradient(center, ellipse cover, #ffffff 0%,$colour 93%); /* Opera 12+ */
+	background: -ms-radial-gradient(center, ellipse cover, #ffffff 0%,$colour 93%); /* IE10+ */
+	background: radial-gradient(ellipse at center, #ffffff 0%,$colour 93%); /* W3C */
+}
+
+.tileBackgroundG{ //class for general background of a tile
+	@include tileBackground(#bebebe);
+	// transition: all 1.5s;
+}
+
+.tileBackgroundX{ //class for background of the x tile
+	@include tileBackground(#FFB6B6);
+	// transition: all 1.5s;
+}
+
+.tileBackgroundO{ //class for background of the o tile
+	@include tileBackground(#41CCFF);
+	// transition: all 1.5s;
+}
+
+
+* { //all elements should have:
+	
+}
+
+//the tic tac toe board style
+.board{
+	margin: 10px auto;
+	li{
+ 		list-style-type: none;
+ 		height:100px;
+ 		font-family: Arial;
+		font-weight: bold;
+		font-size: 10em;
+ 		:nth-child(2n+1){
+			border: none;
+ 		}
+ 		vertical-align:top;	
+ 		display:inline-block;
+ 		text-align: center;
+ 		line-height: 90px;
+ 		@include noselect();
+ 		cursor: default;
+    }
+}
+
+//the score board style
+.score{
+	width:100%;
+	text-align: center;
+	div,h3,p,span{
+		display: inline-block;
+		font-family: Arial;
+		font-weight: bold;
+		margin: 0 10px;
+	}
+	div{
+		p{
+			font-family: Arial;
+			font-weight: bold;
+			font-size: 52pt;
+			:first-child{
+				background-color: red;
+			}
+		}
+		span{
+			font-family: Arial;
+			font-weight: bold;
+			color:rgba(99,99,99,0.39);
+			font-size: 24pt;
+		}
+	}
+}
+
+#options{
+	margin-top: 10px;
+	margin-left: 10px;
+	margin-bottom: 20px;
+	font-size: 12pt;
+	text-align: left;
+	width: 100%;
+	text-transform: uppercase;
+	color:rgba(23,23,23,1);
+	@include noselect();
+	cursor: pointer;
+	font-family: Arial;
+	font-weight: bold;
+	text-decoration: underline;
+}
+
+//the status bar alerts style
+#status{
+	margin-top: 15px;
+	font-size: 18pt;
+	@include noselect();
+	font-family: Arial;
+	font-weight: bold;
+	cursor:default;
+}

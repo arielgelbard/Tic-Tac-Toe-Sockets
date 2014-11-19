@@ -1,0 +1,166 @@
+/* ===========================================
+	        Tic Tac Toe Style Sheet
+	          By: Ariel Gelbard
+	          October 16, 2014
+============================================ */
+/* ===========================================
+	          Reset Style Sheet
+============================================ */
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline; }
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+  display: block; }
+
+body {
+  line-height: 1; }
+
+ol, ul {
+  list-style: none; }
+
+blockquote, q {
+  quotes: none; }
+
+blockquote:before, blockquote:after, q:before, q:after {
+  content: '';
+  content: none; }
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0; }
+
+/* ===========================================
+	          Declerations
+============================================ */
+.tileBackgroundG {
+  background: #ffffff;
+  /* Old browsers */
+  background: -moz-radial-gradient(center, ellipse cover, #ffffff 0%, #bebebe 93%);
+  /* FF3.6+ */
+  background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, #ffffff), color-stop(93%, #bebebe));
+  /* Chrome,Safari4+ */
+  background: -webkit-radial-gradient(center, ellipse cover, #ffffff 0%, #bebebe 93%);
+  /* Chrome10+,Safari5.1+ */
+  background: -o-radial-gradient(center, ellipse cover, #ffffff 0%, #bebebe 93%);
+  /* Opera 12+ */
+  background: -ms-radial-gradient(center, ellipse cover, #ffffff 0%, #bebebe 93%);
+  /* IE10+ */
+  background: radial-gradient(ellipse at center, #ffffff 0%, #bebebe 93%);
+  /* W3C */ }
+
+.tileBackgroundX {
+  background: #ffffff;
+  /* Old browsers */
+  background: -moz-radial-gradient(center, ellipse cover, #ffffff 0%, #FFB6B6 93%);
+  /* FF3.6+ */
+  background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, #ffffff), color-stop(93%, #FFB6B6));
+  /* Chrome,Safari4+ */
+  background: -webkit-radial-gradient(center, ellipse cover, #ffffff 0%, #FFB6B6 93%);
+  /* Chrome10+,Safari5.1+ */
+  background: -o-radial-gradient(center, ellipse cover, #ffffff 0%, #FFB6B6 93%);
+  /* Opera 12+ */
+  background: -ms-radial-gradient(center, ellipse cover, #ffffff 0%, #FFB6B6 93%);
+  /* IE10+ */
+  background: radial-gradient(ellipse at center, #ffffff 0%, #FFB6B6 93%);
+  /* W3C */ }
+
+.tileBackgroundO {
+  background: #ffffff;
+  /* Old browsers */
+  background: -moz-radial-gradient(center, ellipse cover, #ffffff 0%, #41CCFF 93%);
+  /* FF3.6+ */
+  background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, #ffffff), color-stop(93%, #41CCFF));
+  /* Chrome,Safari4+ */
+  background: -webkit-radial-gradient(center, ellipse cover, #ffffff 0%, #41CCFF 93%);
+  /* Chrome10+,Safari5.1+ */
+  background: -o-radial-gradient(center, ellipse cover, #ffffff 0%, #41CCFF 93%);
+  /* Opera 12+ */
+  background: -ms-radial-gradient(center, ellipse cover, #ffffff 0%, #41CCFF 93%);
+  /* IE10+ */
+  background: radial-gradient(ellipse at center, #ffffff 0%, #41CCFF 93%);
+  /* W3C */ }
+
+.board {
+  margin: 10px auto; }
+  .board li {
+    list-style-type: none;
+    height: 100px;
+    font-family: Arial;
+    font-weight: bold;
+    font-size: 10em;
+    vertical-align: top;
+    display: inline-block;
+    text-align: center;
+    line-height: 90px;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: default; }
+    .board li :nth-child(2n+1) {
+      border: none; }
+
+.score {
+  width: 100%;
+  text-align: center; }
+  .score div, .score h3, .score p, .score span {
+    display: inline-block;
+    font-family: Arial;
+    font-weight: bold;
+    margin: 0 10px; }
+  .score div p {
+    font-family: Arial;
+    font-weight: bold;
+    font-size: 52pt; }
+    .score div p :first-child {
+      background-color: red; }
+  .score div span {
+    font-family: Arial;
+    font-weight: bold;
+    color: rgba(99, 99, 99, 0.39);
+    font-size: 24pt; }
+
+#options {
+  margin-top: 10px;
+  margin-left: 10px;
+  margin-bottom: 20px;
+  font-size: 12pt;
+  text-align: left;
+  width: 100%;
+  text-transform: uppercase;
+  color: #171717;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor: pointer;
+  font-family: Arial;
+  font-weight: bold;
+  text-decoration: underline; }
+
+#status {
+  margin-top: 15px;
+  font-size: 18pt;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  font-family: Arial;
+  font-weight: bold;
+  cursor: default; }
