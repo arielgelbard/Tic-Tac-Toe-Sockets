@@ -122,6 +122,8 @@ var x = []; //What Spots X has chosen during the game
 var o = []; //What Spots O has chosen during the game
 // var xScore = 0; //X's Current Score
 // var oScore = 0; //O's Current Score
+var myUsername;
+var opponentUsername;
 var whosX=0;
 var whosO=0;
 var myScore=0;
@@ -324,6 +326,11 @@ function resetAnotherWay(){
         count = 1; //reset count
         turn = 0; //reset players turn
     }
+
+
+$('#requestName').on('click',function(){
+    socket.emit('userNameRequested', $('#desiredUserName').val());
+});
 
     //Option to play with a friend or the computer
     // function options () {

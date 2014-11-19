@@ -6,7 +6,7 @@ http=http.Server(app);
 var io = require('socket.io')(http);
 var games=[]; //List of Game Rooms Running
 var usernames=[]; //List of Users with there wanted Username
-
+var guest=0;
 // Route our Assets
 app.use('/assets/', express.static(__dirname + '/public/assets/')); //when a file requests 
 
@@ -20,7 +20,9 @@ io.on('connection', function(socketer){ //when a user connects with the server
 	console.log('\n\n\n'); //create new line characters to make it easier to read the current status of the game rooms
 	console.log('New User Joined, Showing New Status of Rooms'); //notify server admin of this news
 	addUsertoGame(socketer.id); //When User Connects to the Server, it gets added to a game via this function
-
+	usernames.push([socketer.id,'guest'+guest]);
+	guest=guest+1;
+	console.log(usernames);
 	function enableGameForPlayers(userSent){ //this function passes a userid in and tells the user if they have to wait or if they can begin playing
 		for (var i in games){ //goes through each game
 			if (games[i].indexOf(userSent)!==-1){ //if the game contains the id (sent to this function via the userSent variable)
@@ -89,7 +91,42 @@ io.on('connection', function(socketer){ //when a user connects with the server
 				}
 			} 
 	  	}
+	  	for (var i in usernames){
+	  		var username=usernames[i];
+	  		if (username[0]==socketer.id){
+	  			usernames.splice(i,1);
+	  			console.log(usernames);
+	  			break;
+	  		}
+	  	}
 	});
+
+
+	socketer.on('userNameRequested', function(wantedUsername) {
+		var isItTaken=false;
+		for (var i in usernames){
+			//checks to see if username was taken already
+			if (usernames[i].indexOf(wantedUsername)!==-1){
+				console.log('taken');
+				isItTaken=true;
+				break;
+			}
+		}
+		if (isItTaken==false){
+			//Check if user already inputted a username and deletes it if they did
+			for (var i in usernames){
+				var username=usernames[i];
+		  		if (username[0]===socketer.id){
+		  			usernames.splice(i,1);
+		  			break;
+		  		}
+			}
+			usernames.push([socketer.id,wantedUsername]);
+		}
+		io.to(socketer.id).emit('updatePositionPicked',usersPositionPicked);
+		console.log(usernames);
+	});
+
 
 });
 

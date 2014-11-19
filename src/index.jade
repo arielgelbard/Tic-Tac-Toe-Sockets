@@ -30,7 +30,13 @@ html
     hr
     //- Tic Tac Toe Options
     h6(id="options")
-  </div>
+
+    //-Nicknames Area
+    input(type='text' id='desiredUserName')
+    //- button(onClick='sendUserMessage();') Request Username
+    button(id="requestName") Request Username
+    div(id='messagePosted')
+
   //- Style Sheet Reference
   link(rel="stylesheet" type="text/css" href="assets/styles/main.css")
   //- Script Reference
