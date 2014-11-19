@@ -70,18 +70,24 @@ io.on('connection', function(socketer){ //when a user connects with the server
 			var user=games[i].indexOf(socketer.id); //get the position in the game room
 			if (user!==-1){ //if the user exists in the game room
 			  	removeUserFromGame(socketer.id); //remove the player from the game room
-				if (games.length!==0||games[i].length==0){ //if there is more then 1 user in a game room still
+
+				//This Part Here is only for Users who have moved around to another game room
+				if (games.length!==0){ //if there is more then 1 user in a game room still
 					var gameRoom=games[i]; //reference the game room that the user was found in
-					if (user===0){ //if the user that left had a position of 0 in the game room
-						io.to(gameRoom[1]).emit('questionStartYet',false,false); //tell other player that the user left and disable game board
-						enableGameForPlayers(gameRoom[1]); //determine if other player has been moved to another room and can begin playing
-					}
-					else if (user===1){ //if the user that left had a position of 1 in the game room
-						io.to(gameRoom[0]).emit('questionStartYet',false,false); //tell other player that the user left and disable game board
-						 enableGameForPlayers(gameRoom[0]); //determine if other player has been moved to another room and can begin playing
-					}
+					if(gameRoom!==undefined){ //if the game room still exists
+						if (user===0){ //if the user that left had a position of 0 in the game room
+							io.to(gameRoom[1]).emit('questionStartYet',false,false); //tell other player that the user left and disable game board
+							enableGameForPlayers(gameRoom[1]); //determine if other player has been moved to another room and can begin playing
+						}
+						else if (user===1){ //if the user that left had a position of 1 in the game room
+							io.to(gameRoom[0]).emit('questionStartYet',false,false); //tell other player that the user left and disable game board
+							 enableGameForPlayers(gameRoom[0]); //determine if other player has been moved to another room and can begin playing
+						}
+
+					}		
+
 				}
-			}
+			} 
 	  	}
 	});
 

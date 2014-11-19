@@ -10,7 +10,7 @@ jQuery(function($) {
 
 //Tic Tac Toe Application
 // var app = function(){
-
+// var logIt=document.getElementById("options").innerHTML;
     //Create Reference to Board Background
     var boardBackground = document.getElementsByClassName("board")[0]; //reference for accessing the tic tac toe board
 
@@ -166,10 +166,12 @@ function tileRecieved(tile){
         var tileChosen = this;
         if (ifUserClickedTile==false){
             ifUserClickedTile=true;
+            document.getElementById("status").innerText = "Your Turn!";
         }
         else{
             emitAnswer(tileChosen.i);
             disableTiles(true);
+            document.getElementById("status").innerText = "Opponents Turn!";
         }
         if(turn === 0){ //if its x's turn
             var tile = new xTile();
@@ -214,12 +216,15 @@ function tileRecieved(tile){
                 won = true; //change value to true because X player won    
                 if (whosX==true){
                     myScore=myScore+1;
-                    console.log('X won, ,me: '+myScore);
+                    document.getElementById("meScore").innerHTML=myScore;
                 }
                 else{
                     opponentScore=opponentScore+1;
-                    console.log('X won, opponent: '+opponentScore);
+                     document.getElementById("oScore").innerHTML=opponentScore;
                 }
+                document.getElementById("options").innerHTML="X Won! Play Again?";
+
+
                 resetAnotherWay();
 
 
@@ -232,18 +237,14 @@ function tileRecieved(tile){
                 won = true; //change value to true because O player won      
                 if (whosX==true){
                     myScore=myScore+1;
-                    console.log('O won, ,me: '+myScore);
+                     document.getElementById("meScore").innerHTML=myScore;
                 }
                 else{
                     opponentScore=opponentScore+1;
-                    console.log('O won, opponent: '+opponentScore);
+                     document.getElementById("oScore").innerHTML=opponentScore;
                 }
+                document.getElementById("options").innerHTML="O Won! Play Again?";
                 resetAnotherWay();
-
-
-
-
-
 
 
             }
@@ -253,7 +254,8 @@ function tileRecieved(tile){
 
         if (count === 9 && won === false){ //if all tiles are selected and nobody has won then:
             catsGameScore=catsGameScore+1;
-            console.log('catsGameScore: '+ catsGameScore);
+            document.getElementById("catsScore").innerHTML=catsGameScore;
+            document.getElementById("options").innerHTML="Cats Game! Play Again?";
             resetAnotherWay();
 
 
@@ -262,6 +264,7 @@ function tileRecieved(tile){
         }
         else if (won === false){ //if all tiles are not selected:
             count++; //increment the total number of tiles selected variable
+            disableCertainTiles();
         }
 
         // if (turn === 1 && won === false && count !== 9 && computerON === true) { //if user just selected a tile
@@ -295,7 +298,6 @@ function resetAnotherWay(){
                 whosX=false;
                 whosO=true;
                 disableTiles(true);
-                
             }
             else if (whosO==true){
                 whosX=true;
@@ -342,6 +344,7 @@ function resetAnotherWay(){
 // }
 
 // app(); //Initiate App
+
 var informed;
 socket.on('questionStartYet', function(answer,whoBegins){
     resetBoard();
@@ -354,11 +357,13 @@ socket.on('questionStartYet', function(answer,whoBegins){
         document.getElementById("options").innerHTML =informed;
         if (whoBegins==true){
             disableTiles(false);
+            document.getElementById("status").innerText = "You get to Start!";
             document.getElementById("options").innerHTML=informed+'</br> You Begin the Game!';
             whosX=true;
             whosO=false;
         }
         else{
+            document.getElementById("status").innerText = "Opponent Starts!";
             whosO=true;
             whosX=false;
         }
