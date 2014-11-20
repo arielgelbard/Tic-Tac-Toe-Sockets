@@ -378,13 +378,9 @@ var socket = io();
 
 
 
-
+    //Notify and Update NickNames
     $('#requestName').on('click',function(){
         socket.emit('customUserNameRequested', $('#desiredUserName').val());
-    });
-
-    $('#message').on('click',function(){
-        socket.emit('messageToOpponent', $('#message').val());
     });
 
     socket.on('customUserNameRequestedAnswer', function(response){
@@ -401,6 +397,18 @@ var socket = io();
         postMessge('Sorry! Name Taken!');
             // document.getElementById("options").innerText = msg+document.getElementById("options").innerText; //change the text and alert the user
     });
+
+
+    //Send Chatroom Messages
+    $('#sendMessage').on('click',function(){
+        socket.emit('messageToOpponent', $('#message').val());
+        $('#message').val('');
+    });
+
+    socket.on('messageToOpponentReply', function(response){
+        postMessge(response);
+    });
+
 });
 
 

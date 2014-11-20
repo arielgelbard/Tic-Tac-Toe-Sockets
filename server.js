@@ -141,6 +141,20 @@ io.on('connection', function(socketer){ //when a user connects with the server
 		}
 	});
 
+	socketer.on('messageToOpponent', function(msg) {
+	  	for (var i in games){ //go through the rooms
+	  		if (games[i].indexOf(socketer.id)==0){ //if the users id is found in a game room
+	  			var gameRoom=games[i]; //reference users game room in variable
+	  			io.to(gameRoom[1]).emit('messageToOpponentReply',msg); //tell other player that the opponent picked a tile
+	  			break; //break out of for loop because the game room was found
+	  		}
+	  		else if (games[i].indexOf(socketer.id)==1){ //if the users id is found in a game room
+	  			var gameRoom=games[i]; //reference users game room in variable
+	  			io.to(gameRoom[0]).emit('messageToOpponentReply',msg); //tell other player that the opponent picked a tile
+	  			break; //break out of for loop because the game room was found
+	  		}
+	  	}		
+	});
 
 });
 
