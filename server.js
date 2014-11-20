@@ -34,12 +34,12 @@ io.on('connection', function(socketer){ //when a user connects with the server
 				}
 				else{ //if the game room has two players in it
 					if (user==1){ //if the users id is in position 1 in the game room
-						io.to(gameRoom[0]).emit('questionStartYet',userSent,true); //tell user game has began
-						io.to(userSent).emit('questionStartYet',gameRoom[0],false); //tell user game has began
+						io.to(gameRoom[0]).emit('questionStartYet',findUserId(userSent),true); //tell user game has began
+						io.to(userSent).emit('questionStartYet',findUserId(gameRoom[0]),false); //tell user game has began
 					}
 					else{ //if the users id is in position 0 in the game room
-						io.to(gameRoom[1]).emit('questionStartYet',userSent,false); //tell user game has began
-						io.to(userSent).emit('questionStartYet',gameRoom[1],true); //tell user game has began
+						io.to(gameRoom[1]).emit('questionStartYet',findUserId(userSent),false); //tell user game has began
+						io.to(userSent).emit('questionStartYet',findUserId(gameRoom[1]),true); //tell user game has began
 					}
 
 				}
@@ -102,12 +102,12 @@ io.on('connection', function(socketer){ //when a user connects with the server
 	});
 
 
-	socketer.on('userNameRequested', function(wantedUsername) {
+	socketer.on('customUserNameRequested', function(wantedUsername) {
 		var isItTaken=false;
 		for (var i in usernames){
 			//checks to see if username was taken already
 			if (usernames[i].indexOf(wantedUsername)!==-1){
-				console.log('taken');
+				io.to(socketer.id).emit('customUserNameRequestedTaken',wantedUsername);				
 				isItTaken=true;
 				break;
 			}
@@ -122,9 +122,23 @@ io.on('connection', function(socketer){ //when a user connects with the server
 		  		}
 			}
 			usernames.push([socketer.id,wantedUsername]);
+			io.to(socketer.id).emit('customUserNameRequestedSucess',wantedUsername);
+		  	for (var i in games){ //go through the rooms
+		  		if (games[i].indexOf(socketer.id)==0){ //if the users id is found in a game room
+		  			var gameRoom=games[i]; //reference users game room in variable
+		  			io.to(gameRoom[1]).emit('customUserNameRequestedAnswer',wantedUsername); //tell other player that the opponent picked a tile
+		  			break; //break out of for loop because the game room was found
+		  		}
+		  		else if (games[i].indexOf(socketer.id)==1){ //if the users id is found in a game room
+		  			var gameRoom=games[i]; //reference users game room in variable
+		  			io.to(gameRoom[0]).emit('customUserNameRequestedAnswer',wantedUsername); //tell other player that the opponent picked a tile
+		  			break; //break out of for loop because the game room was found
+		  		}
+		  	}
+			// io.to(socketer.id).emit('updatePositionPicked',usersPositionPicked);
+			console.log('Refreshed List');
+			console.log(usernames);
 		}
-		io.to(socketer.id).emit('updatePositionPicked',usersPositionPicked);
-		console.log(usernames);
 	});
 
 
@@ -201,9 +215,18 @@ http.listen(process.env.PORT || 3000, process.env.IP || "0.0.0.0", function(){
 
 
 
-
-
-
+function findUserId(user){
+	var foundUser;
+  	for (var i in usernames){
+  		var username=usernames[i];
+  		if (username[0]==user){
+  			var userArray=usernames[i];
+			foundUser=userArray[1];
+  			break;
+  		}
+  	}
+  	return foundUser;
+}
 
 
 

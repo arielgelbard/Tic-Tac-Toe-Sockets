@@ -7,7 +7,8 @@ jQuery(function($) {
 //            By: Ariel Gelbard
 //            October 16, 2014
 //==============================================
-
+// Create New Socket Connection using Socket.io
+var socket = io();
 //Tic Tac Toe Application
 // var app = function(){
 // var logIt=document.getElementById("options").innerHTML;
@@ -82,7 +83,6 @@ jQuery(function($) {
         responsiveGame(); //Activates responsiveSize Class
     });
 
-
     //disables tiles from being clicked accidently
     function disableTiles(answer){
         var tiles = document.getElementsByTagName("li"); //reference all tiles
@@ -111,57 +111,172 @@ jQuery(function($) {
         }           
     }
 
+    function resetWhosX(){
+        resetBoard();
+        if (whosX==true){
+            whosX=false;
+            whosO=true;
+            disableTiles(true);
+        }
+        else if (whosO==true){
+            whosX=true;
+            whosO=false;
+        } 
+    }
+
+    //Reset Tic Tac Toe Board
+    function resetBoard () {
+        document.getElementById("status").style.cursor = "auto"; //reset cursor on status bar
+        document.getElementById("status").innerText = "BEGIN!"; //reset actual status text
+        document.getElementById("status").onclick = '';
+        document.getElementById("status").style.pointer = 'default';
+        document.getElementById("status").style.color = 'black';
+        var tiles = document.getElementsByTagName("li"); //reference all tiles
+        var templateTile = new gTile(); //establishes new tile to grab attributes from
+        for (var i=0; i < tiles.length; i++){ //loop through all tiles and reset
+            tiles[i].innerText = ""; //reset value of tile
+            tiles[i].className = templateTile.cssClass; //reset background of tile
+            tiles[i].onclick = templateTile.clickFunction; //reset click event on tile
+        }
+        x = []; //clear tiles x player chose
+        o = []; //clear tiles o player chose
+        count = 1; //reset count
+        turn = 0; //reset players turn
+    }
+
+    function resetGame(){
+
+    }
+
+    var postMessge=function(msg){
+        document.getElementById('messagePosted').innerHTML=document.getElementById('messagePosted').innerHTML+msg+'<br>';
+        document.getElementById('messagePosted').scrollTop = document.getElementById('messagePosted').scrollHeight;
+    }
+    
+
+    socket.on('questionStartYet', function(opponent,whoBegins){
+        resetBoard();
+        disableTiles(true);
+        if (opponent==false){
+            postMessge("<h6>No Opponent Yet</h6>");
+        }
+        else{
+            postMessge("<h6>You are now facing:"+opponent+'</h6>');
+            // document.getElementById("options").innerHTML =informed;
+            if (whoBegins==true){
+                disableTiles(false);
+                document.getElementById("status").innerText = "You get to Start! Begin!";
+                // document.getElementById("options").innerHTML='You Begin the Game!';
+                whosX=true;
+                whosO=false;
+            }
+            else{
+                document.getElementById("status").innerText = "Opponent Starts!";
+                whosO=true;
+                whosX=false;
+            }
+        }
+    });
 
 
-//Variables Needed
-var turn = 0; //Is is Xs or Os Turn?
-var count = 1; //Counts to see if all 9 spots have been filled
-var computerON = false; //can play with a friend or a computer
-// var gameBeganWithX = true; //holds value of true saying x started with player 1
-var x = []; //What Spots X has chosen during the game
-var o = []; //What Spots O has chosen during the game
-// var xScore = 0; //X's Current Score
-// var oScore = 0; //O's Current Score
-var myUsername;
-var opponentUsername;
-var whosX=0;
-var whosO=0;
-var myScore=0;
-var opponentScore=0;
-var catsGameScore=0;
-
-
-// Create New Socket Connection using Socket.io
-var socket = io();
-
-function emitAnswer(choice){
-    socket.emit('positionPicked', choice); //pass message to server!
-}
-
-socket.on('updatePositionPicked', function(choice){
-        tileRecieved(choice);
-        // document.getElementById("options").innerText = msg+document.getElementById("options").innerText; //change the text and alert the user
-});
 
 
 
 
 
-var ifUserClickedTile=true;
 
-function tileRecieved(tile){
-    var tiles = document.getElementsByTagName("li"); //reference all tiles
-    for (var i=0; i<tiles.length; i++){ //go through each tile
-        if (tiles[i].i.toString()==tile.toString()){
-            ifUserClickedTile=false;
-            disableCertainTiles();
-            tiles[i].click();
-            document.getElementById("options").innerHTML = 'sent off: '+tiles[i].i+'</br>'+document.getElementById("options").innerHTML; //change the text and alert the user
-            break;
+
+
+
+
+
+
+    //Variables Needed
+    var turn = 0; //Is is Xs or Os Turn?
+    var count = 1; //Counts to see if all 9 spots have been filled
+    var computerON = false; //can play with a friend or a computer
+    // var gameBeganWithX = true; //holds value of true saying x started with player 1
+    var x = []; //What Spots X has chosen during the game
+    var o = []; //What Spots O has chosen during the game
+    // var xScore = 0; //X's Current Score
+    // var oScore = 0; //O's Current Score
+    var myUsername;
+    var opponentUsername;
+    var whosX=0;
+    var whosO=0;
+    var myScore=0;
+    var opponentScore=0;
+    var catsGameScore=0;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    socket.on('updatePositionPicked', function(choice){
+            tileRecieved(choice);
+            // document.getElementById("options").innerText = msg+document.getElementById("options").innerText; //change the text and alert the user
+    });
+
+
+    var ifUserClickedTile=true;
+
+    function tileRecieved(tile){
+        var tiles = document.getElementsByTagName("li"); //reference all tiles
+        for (var i=0; i<tiles.length; i++){ //go through each tile
+            if (tiles[i].i.toString()==tile.toString()){
+                ifUserClickedTile=false;
+                disableCertainTiles();
+                tiles[i].click();
+                // document.getElementById("options").innerHTML = 'sent off: '+tiles[i].i+'</br>'+document.getElementById("options").innerHTML; //change the text and alert the user
+                break;
+            }
         }
     }
-}
 
+    function emitAnswer(choice){
+        socket.emit('positionPicked', choice); //pass message to server!
+    }
 
     //When Tile is Clicked
     function tileClicked() {
@@ -225,15 +340,7 @@ function tileRecieved(tile){
                      document.getElementById("oScore").innerHTML=opponentScore;
                 }
                 document.getElementById("options").innerHTML="X Won! Play Again?";
-
-
-                resetAnotherWay();
-
-
-
-
-
-
+                resetWhosX();
             }
             else if (numberOfTilesMatchedO === 3){ //Check to see if O Player Won
                 won = true; //change value to true because O player won      
@@ -246,9 +353,7 @@ function tileRecieved(tile){
                      document.getElementById("oScore").innerHTML=opponentScore;
                 }
                 document.getElementById("options").innerHTML="O Won! Play Again?";
-                resetAnotherWay();
-
-
+                resetWhosX();
             }
             if (numberOfTilesMatchedX === 3 || numberOfTilesMatchedO === 3) break; //if anybody won, exit out of for loop to avoid checking anymore combinations
        
@@ -258,11 +363,7 @@ function tileRecieved(tile){
             catsGameScore=catsGameScore+1;
             document.getElementById("catsScore").innerHTML=catsGameScore;
             document.getElementById("options").innerHTML="Cats Game! Play Again?";
-            resetAnotherWay();
-
-
-
-
+            resetWhosX();
         }
         else if (won === false){ //if all tiles are not selected:
             count++; //increment the total number of tiles selected variable
@@ -274,6 +375,37 @@ function tileRecieved(tile){
         // }
 
     }
+
+
+
+
+    $('#requestName').on('click',function(){
+        socket.emit('customUserNameRequested', $('#desiredUserName').val());
+    });
+
+    $('#message').on('click',function(){
+        socket.emit('messageToOpponent', $('#message').val());
+    });
+
+    socket.on('customUserNameRequestedAnswer', function(response){
+        postMessge('user changed there name to:'+response);
+            // document.getElementById("options").innerText = msg+document.getElementById("options").innerText; //change the text and alert the user
+    });
+
+    socket.on('customUserNameRequestedSucess', function(response){
+        postMessge('you have changed your name to:'+response);
+        $('#desiredUserName').val('');
+            // document.getElementById("options").innerText = msg+document.getElementById("options").innerText; //change the text and alert the user
+    });
+    socket.on('customUserNameRequestedTaken', function(response){
+        postMessge('Sorry! Name Taken!');
+            // document.getElementById("options").innerText = msg+document.getElementById("options").innerText; //change the text and alert the user
+    });
+});
+
+
+
+
 
     // //The computer makes a decision of which tile to choose. This is where the megmax algorithm would be applied
     // function computerChoose () { 
@@ -292,45 +424,6 @@ function tileRecieved(tile){
     //         }
     //     }
     // }
-
-
-function resetAnotherWay(){
-            resetBoard();
-            if (whosX==true){
-                whosX=false;
-                whosO=true;
-                disableTiles(true);
-            }
-            else if (whosO==true){
-                whosX=true;
-                whosO=false;
-            } 
-}
-
-    //Reset Tic Tac Toe Board
-    function resetBoard () {
-        document.getElementById("status").style.cursor = "auto"; //reset cursor on status bar
-        document.getElementById("status").innerText = "BEGIN!"; //reset actual status text
-        document.getElementById("status").onclick = '';
-        document.getElementById("status").style.pointer = 'default';
-        document.getElementById("status").style.color = 'black';
-        var tiles = document.getElementsByTagName("li"); //reference all tiles
-        var templateTile = new gTile(); //establishes new tile to grab attributes from
-        for (var i=0; i < tiles.length; i++){ //loop through all tiles and reset
-            tiles[i].innerText = ""; //reset value of tile
-            tiles[i].className = templateTile.cssClass; //reset background of tile
-            tiles[i].onclick = templateTile.clickFunction; //reset click event on tile
-        }
-        x = []; //clear tiles x player chose
-        o = []; //clear tiles o player chose
-        count = 1; //reset count
-        turn = 0; //reset players turn
-    }
-
-
-$('#requestName').on('click',function(){
-    socket.emit('userNameRequested', $('#desiredUserName').val());
-});
 
     //Option to play with a friend or the computer
     // function options () {
@@ -351,35 +444,6 @@ $('#requestName').on('click',function(){
 // }
 
 // app(); //Initiate App
-
-var informed;
-socket.on('questionStartYet', function(answer,whoBegins){
-    resetBoard();
-    disableTiles(true);
-    if (answer==false){
-        document.getElementById("options").innerHTML ="No Opponent Yet";
-    }
-    else{
-        informed="Here We Go! You are facing: "+answer;
-        document.getElementById("options").innerHTML =informed;
-        if (whoBegins==true){
-            disableTiles(false);
-            document.getElementById("status").innerText = "You get to Start!";
-            document.getElementById("options").innerHTML=informed+'</br> You Begin the Game!';
-            whosX=true;
-            whosO=false;
-        }
-        else{
-            document.getElementById("status").innerText = "Opponent Starts!";
-            whosO=true;
-            whosX=false;
-        }
-    }
-});
-
-
-});
-
 
 
 
