@@ -1,9 +1,9 @@
 {
-  "name": "socket-boilerplate",
-  "description": "Socket Boilerplate Project",
-  "version": "0.0.0",
-  "homepage": "http://darcyclarke.me",
-  "author": "Darcy Clarke",
+  "name": "tic-tac-toe-sockets",
+  "description": "This is the Tic Tac Toe Chatroulette Application. You can face different people and play tic tac toe against each other.",
+  "version": "1.0.0",
+  "homepage": "http://arielgelbard.com",
+  "author": "Ariel Gelbard",
   "main": "server.js",
   "dependencies": {
     "express": "*",
