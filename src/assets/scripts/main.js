@@ -150,6 +150,12 @@ jQuery(function($) {
             document.getElementById("status").innerHTML = "No Opponent Yet";
             document.getElementById('messagePosted').innerHTML ='';
             document.getElementById("opponentName").innerText = 'Opponent';
+            document.getElementById("catsScore").innerHTML ='0';
+            document.getElementById("meScore").innerHTML ='0';
+            document.getElementById("oScore").innerHTML ='0';
+            myScore = 0; //keep current score of this client
+            opponentScore = 0; //keeps current score of the opponent
+            catsGameScore = 0; //keeps track of cats game score        
         }
         else{ //if there is an opponent
             postMessge("You are now facing: " + opponent); //tell user they are facing an opponent
@@ -322,8 +328,12 @@ jQuery(function($) {
     //Send Chatroom Messages
     $('#sendMessage').on('click',function(){ //when user clicks the send message button
         socket.emit('messageToOpponent', $('#message').val()); //send the opponent the message
-        postMessge(myUsername + ': ' + $('#message').val()); //tell the user who sent the message there own message
         $('#message').val(''); //clear message box
+    });
+
+    //Clean Message
+    socket.on('messageClean', function(response){
+        postMessge(myUsername + ': ' + response); //cleans message of profanity via the server      
     });
 
     socket.on('messageToOpponentReply', function(response){ //when the opponent sends a message

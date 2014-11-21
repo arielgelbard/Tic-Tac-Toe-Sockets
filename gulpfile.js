@@ -8,7 +8,6 @@ var gulp      = require('gulp');
 var sass      = require('gulp-sass');
 var jade      = require('gulp-jade');
 var rename    = require('gulp-rename');
-var uglify    = require('gulp-uglify');
 
 // ------------------------------------
 // Paths
@@ -59,7 +58,7 @@ gulp.task('styles', function() {
 gulp.task('scripts', function() {
 
   gulp.src(paths.scripts)
-    .pipe(uglify())
+    // .pipe(uglify())
     .pipe(gulp.dest('./public/assets/scripts/'))
 
 });

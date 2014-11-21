@@ -13,7 +13,8 @@ var io = require('socket.io')(http); //get socket.io library
 var games = []; //List of Game Rooms Running
 var usernames = []; //List of Users with there wanted Username
 var guest = 0; //username guest count variable
-
+var filter = require('bad-words');
+var customFilter = new filter.Factory({ placeHolder: '*'});
 // Route our Assets
 app.use('/assets/', express.static(__dirname + '/public/assets/')); //when a file is requested via the assets folder, redirect them to the public/assets folder
 
@@ -150,18 +151,19 @@ io.on('connection', function(socketer){ //when a user connects with the server
 			console.log(usernames); //log username list
 		}
 	});
-	
+
 	//Sending Chat Messages
 	socketer.on('messageToOpponent', function(msg) {
+	  	io.to(socketer.id).emit('messageClean', customFilter.clean(msg)); //clean message and send back to the client
 	  	for (var i in games){ //go through the rooms
 	  		if (games[i].indexOf(socketer.id) == 0){ //if the users id is found in a game room
 	  			var gameRoom = games[i]; //reference users game room in variable
-	  			io.to(gameRoom[1]).emit('messageToOpponentReply', msg); //tell other player that the opponent picked a tile
+	  			io.to(gameRoom[1]).emit('messageToOpponentReply', customFilter.clean(msg)); //tell other player that the opponent picked a tile
 	  			break; //break out of for loop because the game room was found
 	  		}
 	  		else if (games[i].indexOf(socketer.id) == 1){ //if the users id is found in a game room
 	  			var gameRoom = games[i]; //reference users game room in variable
-	  			io.to(gameRoom[0]).emit('messageToOpponentReply', msg); //tell other player that the opponent picked a tile
+	  			io.to(gameRoom[0]).emit('messageToOpponentReply', customFilter.clean(msg)); //tell other player that the opponent picked a tile
 	  			break; //break out of for loop because the game room was found
 	  		}
 	  	}		

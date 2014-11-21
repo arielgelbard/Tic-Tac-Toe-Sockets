@@ -7,24 +7,15 @@
   "main": "server.js",
   "dependencies": {
     "express": "*",
-    "socket.io": "*"
+    "socket.io": "*",
+    "bad-words": "*"
   },
   "devDependencies": {
-    "underscore": "*",
     "jade": "*",
     "gulp": "*",
-    "gulp-if": "*",
     "gulp-debug": "*",
-    "gulp-util": "*",
-    "gulp-load-plugins": "*",
     "gulp-sass": "*",
-    "gulp-uglify": "*",
-    "gulp-livereload": "*",
-    "gulp-concat": "*",
     "gulp-jade": "*",
     "gulp-rename": "*"
-  },
-  "peerDependencies": {
-    "grunt": "~0.4.0"
   }
 }
