@@ -166,7 +166,7 @@ table {
   cursor: default; }
 
 #messagePosted {
-  background-color: red;
+  border: 1px black solid;
   text-align: left;
   font-size: 14px;
   height: 200px;

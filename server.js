@@ -28,6 +28,7 @@ io.on('connection', function(socketer){ //when a user connects with the server
 	console.log('New User Joined, Showing New Status of Rooms'); //notify server admin of this news
 	addUsertoGame(socketer.id); //When User Connects to the Server, it gets added to a game via this function
 	usernames.push([socketer.id, 'guest' + guest]); //add standard username to list
+	io.to(socketer.id).emit('customUserNameRequestedSucess','guest'+guest);	
 	guest = guest + 1; //append guest count variable to create new username
 
 	//this function passes a userid in and tells the user if they have to wait or if they can begin playing
@@ -37,7 +38,8 @@ io.on('connection', function(socketer){ //when a user connects with the server
 				var user = games[i].indexOf(userSent); //get the position where the users id is in the array
 				var gameRoom = games[i]; //assign this variable the gameroom the id is currently in
 				if(games[i].length == 1){ //if there is only one id in the gameroom
-					io.to(gameRoom[user]).emit('questionStartYet', false, false); //tell the user the game has not started yet
+					//console.log('emit here')
+					//io.to(gameRoom[user]).emit('questionStartYet', false, false); //tell the user the game has not started yet
 					break; //exit for loop
 				}
 				else{ //if the game room has two players in it
@@ -74,26 +76,31 @@ io.on('connection', function(socketer){ //when a user connects with the server
 
 	//when the client leaves the website (disconnects)
 	socketer.on('disconnect', function() { //when a user leaves the page for any reason. Procedure goes as follows: user 0 disconnects, 0 is removed from game room, user 1 is told and has controls disabled
+		var opponent;
 		for (var i in games){ //go through the rooms
 			var user = games[i].indexOf(socketer.id); //get the position in the game room
 			if (user !== -1){ //if the user exists in the game room
-			  	removeUserFromGame(socketer.id); //remove the player from the game room
-
 				//This Part Here is only for Users who have moved around to another game room
 				if (games.length !== 0){ //if there is more then 1 user in a game room still
 					var gameRoom = games[i]; //reference the game room that the user was found in
 					if(gameRoom !== undefined){ //if the game room still exists
 						if (user === 0){ //if the user that left had a position of 0 in the game room
-							io.to(gameRoom[1]).emit('questionStartYet', false, false); //tell other player that the user left and disable game board
-							enableGameForPlayers(gameRoom[1]); //determine if other player has been moved to another room and can begin playing
+							// io.to(gameRoom[1]).emit('questionStartYet', false, false); //tell other player that the user left and disable game board
+							// console.log('sent sent');
+							opponent=gameRoom[1];
+							// enableGameForPlayers(gameRoom[1]); //determine if other player has been moved to another room and can begin playing
 						}
 						else if (user === 1){ //if the user that left had a position of 1 in the game room
-							io.to(gameRoom[0]).emit('questionStartYet', false, false); //tell other player that the user left and disable game board
-							 enableGameForPlayers(gameRoom[0]); //determine if other player has been moved to another room and can begin playing
+							opponent=gameRoom[0];
+							// console.log('sent sent sent');
+							// enableGameForPlayers(gameRoom[0]); //determine if other player has been moved to another room and can begin playing
 						}
+						io.to(opponent).emit('questionStartYet', false, false); //tell other player that the user left and disable game board
 					}		
-
 				}
+			  	removeUserFromGame(socketer.id); //remove the player from the game room				
+				enableGameForPlayers(opponent); //determine if other player has been moved to another room and can begin playing
+			
 			} 
 	  	}
 	  	for (var i in usernames){ //go through the username list

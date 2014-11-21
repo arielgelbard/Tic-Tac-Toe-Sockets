@@ -7,8 +7,8 @@ var fs        = require('fs');
 var gulp      = require('gulp');
 var sass      = require('gulp-sass');
 var jade      = require('gulp-jade');
-var imagemin  = require('gulp-sass');
 var rename    = require('gulp-rename');
+var uglify    = require('gulp-uglify');
 
 // ------------------------------------
 // Paths
@@ -17,7 +17,6 @@ var rename    = require('gulp-rename');
 var paths     = {
   styles      : './src/assets/styles/**/*.sass',
   scripts     : './src/assets/scripts/**/*.js',
-  images      : './src/assets/images/**/*.{png,gif,jpeg,jpg,svg}',
   templates   : './src/**/*.jade'
 };
 
@@ -25,7 +24,7 @@ var paths     = {
 // Default Task
 // ------------------------------------
 
-gulp.task('default', ['images', 'scripts', 'styles', 'templates']);
+gulp.task('default', ['scripts', 'styles', 'templates']);
 
 // ------------------------------------
 // Watch Task
@@ -60,19 +59,8 @@ gulp.task('styles', function() {
 gulp.task('scripts', function() {
 
   gulp.src(paths.scripts)
+    .pipe(uglify())
     .pipe(gulp.dest('./public/assets/scripts/'))
-
-});
-
-// ------------------------------------
-// Images Task
-// ------------------------------------
-
-gulp.task('images', function() {
-
-  gulp.src(paths.images)
-    .pipe(imagemin())
-    .pipe(gulp.dest('./public/assets/images/'))
 
 });
 
@@ -87,5 +75,3 @@ gulp.task('templates', function() {
     .pipe(gulp.dest('./public/'))
 
 });
-
-

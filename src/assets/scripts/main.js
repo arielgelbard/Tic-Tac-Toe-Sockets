@@ -107,21 +107,23 @@ jQuery(function($) {
         if (whosX == true){ //whoever is x
             whosX = false; //make them not x
             whosO = true; //make them o
+            document.getElementById("status").innerText = "Opponent Goes First!"; //reset actual status text
             disableTiles(); //disable tiles from being clicked because client is starting
         }
         else if (whosO == true){ //whoever is o
             whosX = true; //make them not o
             whosO = false; //make them x
+            document.getElementById("status").innerText = "You Go First!"; //reset actual status text
         } 
     }
 
     //Reset Tic Tac Toe Board
     function resetBoard () {
-        document.getElementById("status").style.cursor = "auto"; //reset cursor on status bar
-        document.getElementById("status").innerText = "BEGIN!"; //reset actual status text
-        document.getElementById("status").onclick = ''; //disable click functionality
-        document.getElementById("status").style.pointer = 'default'; //make pointer regualr again
-        document.getElementById("status").style.color = 'black'; //change color back to black
+        // document.getElementById("status").style.cursor = "auto"; //reset cursor on status bar
+        // document.getElementById("status").innerText = "BEGIN!"; //reset actual status text
+        // document.getElementById("status").onclick = ''; //disable click functionality
+        // document.getElementById("status").style.pointer = 'default'; //make pointer regualr again
+        // document.getElementById("status").style.color = 'black'; //change color back to black
         var tiles = document.getElementsByTagName("li"); //reference all tiles
         var templateTile = new gTile(); //establishes new tile to grab attributes from
         for (var i=0; i<tiles.length; i++){ //loop through all tiles and reset
@@ -145,10 +147,14 @@ jQuery(function($) {
         resetBoard(); //reset game board
         disableTiles(); //disable tiles from being clicked
         if (opponent == false){ //if there is no opponent
-            postMessge("<h6>No Opponent Yet</h6>"); //tell user that there is no oppopent yet
+            document.getElementById("status").innerHTML = "No Opponent Yet";
+            document.getElementById('messagePosted').innerHTML ='';
+            document.getElementById("opponentName").innerText = 'Opponent';
         }
         else{ //if there is an opponent
-            postMessge("<h6>You are now facing:" + opponent + '</h6>'); //tell user they are facing an opponent
+            postMessge("You are now facing: " + opponent); //tell user they are facing an opponent
+            opponentUsername = opponent;
+            document.getElementById("opponentName").innerText = opponent;
             if (whoBegins == true){ //if this client is the one who begins
                 disableCertainTiles(); //disable tiles to start
                 document.getElementById("status").innerText = "You get to Start! Begin!"; //alert user they can start
@@ -262,8 +268,8 @@ jQuery(function($) {
                     opponentScore = opponentScore + 1; //increase score by 1
                      document.getElementById("oScore").innerHTML = opponentScore; //readjust score board
                 }
-                document.getElementById("options").innerHTML = "X Won! Play Again?"; //tell everyone that x won
-                resetWhosX(); //players swtich whoever is x and whoever is o
+                document.getElementById("status").innerHTML = "X Won! Rematch?"; //tell everyone that x won
+                var t=setTimeout(function(){resetWhosX();},1000); //players swtich whoever is x and whoever is o
             }
             else if (numberOfTilesMatchedO === 3){ //Check to see if O Player Won
                 won = true; //change value to true because O player won      
@@ -275,15 +281,15 @@ jQuery(function($) {
                     opponentScore = opponentScore + 1; //increase score by 1
                      document.getElementById("oScore").innerHTML = opponentScore; //readjust score board
                 }
-                document.getElementById("options").innerHTML = "O Won! Play Again?"; //tell everyone that o won
-                resetWhosX(); //players swtich whoever is x and whoever is o
+                document.getElementById("status").innerHTML = "O Won! Rematch?"; //tell everyone that o won
+                var t=setTimeout(function(){resetWhosX();},1000); //players swtich whoever is x and whoever is o
             }
             if (numberOfTilesMatchedX === 3 || numberOfTilesMatchedO === 3) break; //if anybody won, exit out of for loop to avoid checking anymore combinations
         }
         if (count === 9 && won === false){ //if all tiles are selected and nobody has won then:
             catsGameScore = catsGameScore + 1; //increase catsgame score
             document.getElementById("catsScore").innerHTML = catsGameScore; //update scoreboard
-            document.getElementById("options").innerHTML = "Cats Game! Play Again?"; //tell users the status of the game
+            document.getElementById("status").innerHTML = "Cats Game!"; //tell users the status of the game
             resetWhosX(); //players swtich whoever is x and whoever is o
         }
         else if (won === false){ //if all tiles are not selected:
@@ -300,12 +306,14 @@ jQuery(function($) {
     });
 
     socket.on('customUserNameRequestedAnswer', function(response){ //server tells client that opponent has changed there username
-        postMessge('user changed there name to:' + response); //tell the client that the opponent changed there username
+        postMessge(opponentUsername+ ' changed there name to: ' + response); //tell the client that the opponent changed there username
+        opponentUsername=response;
+        $('.opponent').val(response);
     });
 
     socket.on('customUserNameRequestedSucess', function(response){ //server tells client that username change was sucessful
-        postMessge('you have changed your name to:' + response); //tell the user that there username has been switched
-        $('#desiredUserName').val(''); //clear username request box
+        postMessge('Your name is: ' + response); //tell the user that there username has been switched
+        myUsername=response;
     });
     socket.on('customUserNameRequestedTaken', function(response){ //server tells client that username has been taken
         postMessge('Sorry! Name Taken!'); //post message that the username has been taken
@@ -314,11 +322,11 @@ jQuery(function($) {
     //Send Chatroom Messages
     $('#sendMessage').on('click',function(){ //when user clicks the send message button
         socket.emit('messageToOpponent', $('#message').val()); //send the opponent the message
-        postMessge($('#message').val()); //tell the user who sent the message there own message
+        postMessge(myUsername + ': ' + $('#message').val()); //tell the user who sent the message there own message
         $('#message').val(''); //clear message box
     });
 
     socket.on('messageToOpponentReply', function(response){ //when the opponent sends a message
-        postMessge(response);  //tell the user the opponents message
+        postMessge(opponentUsername + ': ' + response);  //tell the user the opponents message
     });
 });
