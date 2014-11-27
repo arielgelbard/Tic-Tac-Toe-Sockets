@@ -13,23 +13,23 @@ jQuery(function($) {
     var socket = io();
 
     //Create Reference to Board Background
-    var boardBackground = document.getElementsByClassName("board")[0]; //reference for accessing the tic tac toe board
+    var boardBackground = document.getElementsByClassName('board')[0]; //reference for accessing the tic tac toe board
 
     function xTile () { //X Tile
-        this.cssClass = "tileBackgroundX"; //Class to access Radial Background
-        this.fontColor = "#A10000"; //Font Colour
-        this.text = "x"; //Tile Name
+        this.cssClass = 'tileBackgroundX'; //Class to access Radial Background
+        this.fontColor = '#A10000'; //Font Colour
+        this.text = 'x'; //Tile Name
     };
 
     function oTile () { //O Tile
-        this.cssClass = "tileBackgroundO"; //Class to access Radial Background
-        this.fontColor = "#002BE3"; //Font Colour
+        this.cssClass = 'tileBackgroundO'; //Class to access Radial Background
+        this.fontColor = '#002BE3'; //Font Colour
         this.text = 'o'; //Tile Name
     };
 
     function gTile () { //General Tile
         this.element = document.createElement('li'); //creates li element
-        this.cssClass = "tileBackgroundG"; //Class to access Radial Background
+        this.cssClass = 'tileBackgroundG'; //Class to access Radial Background
         this.clickFunction = tileClicked; //Assigned Tile Function
     };
 
@@ -41,34 +41,34 @@ jQuery(function($) {
         tile.onclick = templateTile.clickFunction; //when a tile is clicked, tileClicked will be activated
         tile.i = i; //make tile a number
         if (i<7) {
-            tile.style.borderBottom = "3px solid white"; //making the gameboard look like tiles by having diving lines
+            tile.style.borderBottom = '3px solid white'; //making the gameboard look like tiles by having diving lines
         }
         if (i === 3 ||  i === 6 ||  i === 9){ //if it is tiles 3, 6, or 9
             //Nothing Happens
         }
         else {
-            tile.style.borderRight = "3px solid white"; //making the gameboard look like tiles by having diving lines
+            tile.style.borderRight = '3px solid white'; //making the gameboard look like tiles by having diving lines
         }
         boardBackground.appendChild(tile); //add to board
     }
 
     //Makes Tic Tac Toe Game Responsive
     function responsiveGame () {
-        if (window.innerWidth > 590){ //if the users browser is more then 590px wide, then:
-            var tiles = document.getElementsByTagName("li"); //Grabs all the tiles that were made when the app was created
+        if (window.innerWidth > 490){ //if the users browser is more then 590px wide, then:
+            var tiles = document.getElementsByTagName('li'); //Grabs all the tiles that were made when the app was created
             for (var i = 0; i<tiles.length; i++) { //go through each tile
-                    tiles[i].style.width = 190 + "px"; //adjust tiles width
-                    tiles[i].style.height = 190 + "px"; //adjust tiles height
-                    tiles[i].style.lineHeight = 180 + "px"; //adjust tiles line height
+                    tiles[i].style.width = 140 + 'px'; //adjust tiles width
+                    tiles[i].style.height = 140 + 'px'; //adjust tiles height
+                    tiles[i].style.lineHeight = 180 + 'px'; //adjust tiles line height
             }
-            boardBackground.style.width = 590 + "px"; //adjust width and height of the boards background
+            boardBackground.style.width = 490 + 'px'; //adjust width and height of the boards background
         }
         else{
-            var tiles = document.getElementsByTagName("li"); //Grabs all the tiles that were made when the app was created
+            var tiles = document.getElementsByTagName('li'); //Grabs all the tiles that were made when the app was created
             for (var i = 0;i<tiles.length; i++){ //go through each tile
-                    tiles[i].style.width = (window.innerWidth / 3.2) + "px"; //adjust tiles width
-                    tiles[i].style.height = (window.innerWidth / 3.2) + "px"; //adjust tiles height
-                    tiles[i].style.lineHeight = ((window.innerWidth / 3.2) - 20) + "px"; //adjust tiles line height
+                    tiles[i].style.width = (window.innerWidth / 3.2) + 'px'; //adjust tiles width
+                    tiles[i].style.height = (window.innerWidth / 3.2) + 'px'; //adjust tiles height
+                    tiles[i].style.lineHeight = ((window.innerWidth / 3.2) - 20) + 'px'; //adjust tiles line height
             }
             boardBackground.style.width = ((window.innerWidth / 3.2) * 3) + 6 + 'px'; //adjust width and height of the boards background
         }
@@ -77,13 +77,13 @@ jQuery(function($) {
     responsiveGame(); //call function to adjust dimensions for users browser
 
     //Listens to see if the window has been resizes
-    window.addEventListener ("resize", function () {
+    window.addEventListener ('resize', function () {
         responsiveGame(); //Activates responsiveSize Class
     });
 
     //disables tiles from being clicked accidently
     function disableTiles(answer){
-        var tiles = document.getElementsByTagName("li"); //reference all tiles
+        var tiles = document.getElementsByTagName('li'); //reference all tiles
         for (var i = 0; i<tiles.length; i++){ //go through each tile
             tiles[i].onclick = null; //disable tile being clicked
         }
@@ -91,7 +91,7 @@ jQuery(function($) {
 
     //This disables certain tiles that have already been clicked
     function disableCertainTiles(){ 
-        var tiles = document.getElementsByTagName("li"); //reference all tiles
+        var tiles = document.getElementsByTagName('li'); //reference all tiles
         for (var i = 0; i<tiles.length; i++){ //go through each tile
             if (x.indexOf(tiles[i].i) !== -1||o.indexOf(tiles[i].i) !== -1){ //if the tile has been clicked on by the opponent or client
                 tiles[i].onclick = null; //disable click event
@@ -107,27 +107,27 @@ jQuery(function($) {
         if (whosX == true){ //whoever is x
             whosX = false; //make them not x
             whosO = true; //make them o
-            document.getElementById("status").innerText = "Opponent Goes First!"; //reset actual status text
+            document.getElementById('status').innerText = 'Opponent Goes First!'; //reset actual status text
             disableTiles(); //disable tiles from being clicked because client is starting
         }
         else if (whosO == true){ //whoever is o
             whosX = true; //make them not o
             whosO = false; //make them x
-            document.getElementById("status").innerText = "You Go First!"; //reset actual status text
+            document.getElementById('status').innerText = 'You Go First!'; //reset actual status text
         } 
     }
 
     //Reset Tic Tac Toe Board
     function resetBoard () {
-        // document.getElementById("status").style.cursor = "auto"; //reset cursor on status bar
-        // document.getElementById("status").innerText = "BEGIN!"; //reset actual status text
-        // document.getElementById("status").onclick = ''; //disable click functionality
-        // document.getElementById("status").style.pointer = 'default'; //make pointer regualr again
-        // document.getElementById("status").style.color = 'black'; //change color back to black
-        var tiles = document.getElementsByTagName("li"); //reference all tiles
+        // document.getElementById('status').style.cursor = 'auto'; //reset cursor on status bar
+        // document.getElementById('status').innerText = 'BEGIN!'; //reset actual status text
+        // document.getElementById('status').onclick = ''; //disable click functionality
+        // document.getElementById('status').style.pointer = 'default'; //make pointer regualr again
+        // document.getElementById('status').style.color = 'black'; //change color back to black
+        var tiles = document.getElementsByTagName('li'); //reference all tiles
         var templateTile = new gTile(); //establishes new tile to grab attributes from
         for (var i=0; i<tiles.length; i++){ //loop through all tiles and reset
-            tiles[i].innerText = ""; //reset value of tile
+            tiles[i].innerText = ''; //reset value of tile
             tiles[i].className = templateTile.cssClass; //reset background of tile
             tiles[i].onclick = templateTile.clickFunction; //reset click event on tile
         }
@@ -138,7 +138,7 @@ jQuery(function($) {
     }
 
     var postMessge=function(msg){ //post messages to the message box
-        document.getElementById('messagePosted').innerHTML = document.getElementById('messagePosted').innerHTML+msg+'<br>'; //append message to the message box
+        document.getElementById('messagePosted').innerHTML = '<p class="messageLine">'+msg+'</p>' + document.getElementById('messagePosted').innerHTML; //append message to the message box
         document.getElementById('messagePosted').scrollTop = document.getElementById('messagePosted').scrollHeight; //scroll to bottom of the messages box
     }
     
@@ -147,28 +147,28 @@ jQuery(function($) {
         resetBoard(); //reset game board
         disableTiles(); //disable tiles from being clicked
         if (opponent == false){ //if there is no opponent
-            document.getElementById("status").innerHTML = "No Opponent Yet";
+            document.getElementById('status').innerHTML = 'No Opponent Yet';
             document.getElementById('messagePosted').innerHTML ='';
-            document.getElementById("opponentName").innerText = 'Opponent';
-            document.getElementById("catsScore").innerHTML ='0';
-            document.getElementById("meScore").innerHTML ='0';
-            document.getElementById("oScore").innerHTML ='0';
+            document.getElementById('opponentName').innerText = 'Opponent';
+            document.getElementById('catsScore').innerHTML ='0';
+            document.getElementById('meScore').innerHTML ='0';
+            document.getElementById('oScore').innerHTML ='0';
             myScore = 0; //keep current score of this client
             opponentScore = 0; //keeps current score of the opponent
             catsGameScore = 0; //keeps track of cats game score        
         }
         else{ //if there is an opponent
-            postMessge("You are now facing: " + opponent); //tell user they are facing an opponent
+            postMessge('You are now facing: ' + opponent); //tell user they are facing an opponent
             opponentUsername = opponent;
-            document.getElementById("opponentName").innerText = opponent;
+            document.getElementById('opponentName').innerText = opponent;
             if (whoBegins == true){ //if this client is the one who begins
                 disableCertainTiles(); //disable tiles to start
-                document.getElementById("status").innerText = "You get to Start! Begin!"; //alert user they can start
+                document.getElementById('status').innerText = 'You get to Start! Begin!'; //alert user they can start
                 whosX = true; //since they start, they are x
                 whosO = false; //they are not o
             }
             else{ //if this client does not begin
-                document.getElementById("status").innerText = "Opponent Starts!"; //alert user that the opponent is starting
+                document.getElementById('status').innerText = 'Opponent Starts!'; //alert user that the opponent is starting
                 whosO = true; //since they don't start, they are o
                 whosX = false; //they are not x
             }
@@ -198,7 +198,7 @@ jQuery(function($) {
 
     var ifUserClickedTile=true; //variable to indicate which client clicked a tile
     function tileRecieved(tile){ //tell the client that the opponent made a choice
-        var tiles = document.getElementsByTagName("li"); //reference all tiles
+        var tiles = document.getElementsByTagName('li'); //reference all tiles
         for (var i = 0; i<tiles.length; i++){ //go through each tile
             if (tiles[i].i.toString() == tile.toString()){ //if the tile picked by the opponent matches the tile on the client
                 ifUserClickedTile = false; //let next function know that the opponent clicked the tile
@@ -221,12 +221,12 @@ jQuery(function($) {
         if (ifUserClickedTile == false){ //if the opponent clicked the tile
             ifUserClickedTile = true; //change value back to allow current client to click tile
             disableCertainTiles(); //disable certain tiles
-            document.getElementById("status").innerText = "Your Turn!";
+            document.getElementById('status').innerText = 'Your Turn!';
         }
         else{ //if the client clicked a tile
             emitAnswer(tileChosen.i); //tell server to tell opponent that they picked a tile
             disableTiles(); //disable current client from picking anymore tiles
-            document.getElementById("status").innerText = "Opponents Turn!"; //tell client that its the opponents turn to click
+            document.getElementById('status').innerText = 'Opponents Turn!'; //tell client that its the opponents turn to click
         }
         if(turn === 0){ //if its x's turn
             var tile = new xTile();
@@ -263,39 +263,39 @@ jQuery(function($) {
                     numberOfTilesMatchedO++; //total number of matched tiles increments by 1
                 }       
             }
-            var tiles = document.getElementsByTagName("li"); //reference tiles from board
+            var tiles = document.getElementsByTagName('li'); //reference tiles from board
             if (numberOfTilesMatchedX === 3){ //Check to see if X Player Won
                 won = true; //change value to true because X player won    
                 if (whosX == true){ //if the client is x
                     myScore = myScore + 1; //increase score by 1
-                    document.getElementById("meScore").innerHTML = myScore; //readjust score board
+                    document.getElementById('meScore').innerHTML = myScore; //readjust score board
                 }
                 else{ //if the opponent is o
                     opponentScore = opponentScore + 1; //increase score by 1
-                     document.getElementById("oScore").innerHTML = opponentScore; //readjust score board
+                     document.getElementById('oScore').innerHTML = opponentScore; //readjust score board
                 }
-                document.getElementById("status").innerHTML = "X Won! Rematch?"; //tell everyone that x won
+                document.getElementById('status').innerHTML = 'X Won! Rematch?'; //tell everyone that x won
                 var t=setTimeout(function(){resetWhosX();},1000); //players swtich whoever is x and whoever is o
             }
             else if (numberOfTilesMatchedO === 3){ //Check to see if O Player Won
                 won = true; //change value to true because O player won      
                 if (whosX == true){ //if the client is x
                     myScore = myScore + 1; //increase score by 1
-                     document.getElementById("meScore").innerHTML = myScore; //readjust score board
+                     document.getElementById('meScore').innerHTML = myScore; //readjust score board
                 }
                 else{ //if the opponent is x
                     opponentScore = opponentScore + 1; //increase score by 1
-                     document.getElementById("oScore").innerHTML = opponentScore; //readjust score board
+                     document.getElementById('oScore').innerHTML = opponentScore; //readjust score board
                 }
-                document.getElementById("status").innerHTML = "O Won! Rematch?"; //tell everyone that o won
+                document.getElementById('status').innerHTML = 'O Won! Rematch?'; //tell everyone that o won
                 var t=setTimeout(function(){resetWhosX();},1000); //players swtich whoever is x and whoever is o
             }
             if (numberOfTilesMatchedX === 3 || numberOfTilesMatchedO === 3) break; //if anybody won, exit out of for loop to avoid checking anymore combinations
         }
         if (count === 9 && won === false){ //if all tiles are selected and nobody has won then:
             catsGameScore = catsGameScore + 1; //increase catsgame score
-            document.getElementById("catsScore").innerHTML = catsGameScore; //update scoreboard
-            document.getElementById("status").innerHTML = "Cats Game!"; //tell users the status of the game
+            document.getElementById('catsScore').innerHTML = catsGameScore; //update scoreboard
+            document.getElementById('status').innerHTML = 'Cats Game!'; //tell users the status of the game
             resetWhosX(); //players swtich whoever is x and whoever is o
         }
         else if (won === false){ //if all tiles are not selected:
@@ -319,6 +319,7 @@ jQuery(function($) {
 
     socket.on('customUserNameRequestedSucess', function(response){ //server tells client that username change was sucessful
         postMessge('Your name is: ' + response); //tell the user that there username has been switched
+        $('.nicknameArea').slideToggle();
         myUsername=response;
     });
     socket.on('customUserNameRequestedTaken', function(response){ //server tells client that username has been taken
@@ -338,5 +339,29 @@ jQuery(function($) {
 
     socket.on('messageToOpponentReply', function(response){ //when the opponent sends a message
         postMessge(opponentUsername + ': ' + response);  //tell the user the opponents message
+    });
+
+    //Open Send Message Box Dialog
+    $('#sendMessageButton').on('click',function(){
+        $('.sendMessageArea').slideToggle();
+        $('.score').slideToggle();
+    });
+
+    //Open Nickname Box Dialog
+    $('#changeNicknameButton').on('click',function(){
+        $('.nicknameArea').slideToggle();
+    });
+
+    //Close Messages Area on Start
+    $('.sendMessageArea').slideToggle();
+
+    //Open Nickname Area on start to let the user change there name right away
+    $('.nicknameArea').slideToggle();
+
+    //If a user hits the enter button anytime from there keyboard, it will easily send the message instead of clicking the send button
+    $(document).keypress(function(e) {
+        if(e.which == 13) {
+            $('#sendMessage').click();
+        }
     });
 });

@@ -39,8 +39,8 @@ io.on('connection', function(socketer){ //when a user connects with the server
 				var user = games[i].indexOf(userSent); //get the position where the users id is in the array
 				var gameRoom = games[i]; //assign this variable the gameroom the id is currently in
 				if(games[i].length == 1){ //if there is only one id in the gameroom
-					//console.log('emit here')
-					//io.to(gameRoom[user]).emit('questionStartYet', false, false); //tell the user the game has not started yet
+					//ERROR WITH THIS LINE?!
+					io.to(gameRoom[user]).emit('questionStartYet', false, false); //tell the user the game has not started yet
 					break; //exit for loop
 				}
 				else{ //if the game room has two players in it
@@ -86,22 +86,16 @@ io.on('connection', function(socketer){ //when a user connects with the server
 					var gameRoom = games[i]; //reference the game room that the user was found in
 					if(gameRoom !== undefined){ //if the game room still exists
 						if (user === 0){ //if the user that left had a position of 0 in the game room
-							// io.to(gameRoom[1]).emit('questionStartYet', false, false); //tell other player that the user left and disable game board
-							// console.log('sent sent');
-							opponent=gameRoom[1];
-							// enableGameForPlayers(gameRoom[1]); //determine if other player has been moved to another room and can begin playing
+							opponent=gameRoom[1]; //assign opponent to send off
 						}
 						else if (user === 1){ //if the user that left had a position of 1 in the game room
-							opponent=gameRoom[0];
-							// console.log('sent sent sent');
-							// enableGameForPlayers(gameRoom[0]); //determine if other player has been moved to another room and can begin playing
+							opponent=gameRoom[0]; //assign opponent to send off
 						}
 						io.to(opponent).emit('questionStartYet', false, false); //tell other player that the user left and disable game board
 					}		
 				}
 			  	removeUserFromGame(socketer.id); //remove the player from the game room				
 				enableGameForPlayers(opponent); //determine if other player has been moved to another room and can begin playing
-			
 			} 
 	  	}
 	  	for (var i in usernames){ //go through the username list
@@ -250,7 +244,7 @@ function findUserId(user){
 }
 
 // Start Server
-http.listen(process.env.PORT || 3000, process.env.IP || "0.0.0.0", function(){ //listen for gets at the certain ip address
+http.listen(process.env.PORT || 3000, process.env.IP || '0.0.0.0', function(){ //listen for gets at the certain ip address
   var addr = http.address(); //assign ip address object to variable
-  console.log("Server started at", addr.address + ":" + addr.port); //log objects ip address and port to server admin
+  console.log('Server started at', addr.address + ':' + addr.port); //log objects ip address and port to server admin
 });

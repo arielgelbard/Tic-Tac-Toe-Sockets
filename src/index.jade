@@ -7,6 +7,7 @@ doctype html
 html
   head
     title Responsive Tic Tac Toe!
+    meta(name="viewport" content="width=device-width, initial-scale=1")
   body
   //- Tic Tac Toe Background
   div(class='board')
@@ -16,7 +17,7 @@ html
     h1(id="status") LETS PLAY!
     div
       h1 Me
-      h2(id="meScore") 0
+      h1(id="meScore") 0
     div
       h1 Tie
       h1(id="catsScore") 0
@@ -25,17 +26,23 @@ html
       h1(id="oScore") 0
     hr
     //- Tic Tac Toe Options
-    h6(id="options")
+  //- h6(id="options")
+  div.options
+    a(href="#" id="sendMessageButton") Send Message
+    a(href="#" id="changeNicknameButton") Change Nickname
+    //- //-Change Nickname Area
+  div.nicknameArea
+    input.textbox(type='text' id='desiredUserName' placeholder='Enter Nickname')
+    button.button(id="requestName") Request Username
+  div.sendMessageArea
     //- Send Messages Input Area
-    input(type='text' id='message' placeholder='Message')
-    button(id="sendMessage") Send Message
-    //- Where Messages are Displayed
-    div(id='messagePosted')
-    //-Change Nickname Area
-    input(type='text' id='desiredUserName' placeholder='Enter New Nickname')
-    button(id="requestName") Request Username
+    input.textbox(type='text' id='message' placeholder='Message')
+    button.button(id="sendMessage") Send Message
+  //- Where Messages are Displayed
+  div(id='messagePosted')
 
   //- Style Sheet Reference
+  link(rel="stylesheet" type="text/css" href="assets/styles/reset.css")
   link(rel="stylesheet" type="text/css" href="assets/styles/main.css")
   
   //- Script Reference

@@ -55,7 +55,11 @@ gulp.task('styles', function() {
     .pipe(rename('main.css'))
     .pipe(gulp.dest('./public/assets/styles/'))
 
+  gulp.src('./src/assets/styles/reset.css')
+    .pipe(gulp.dest('./public/assets/styles/'))
+
 });
+
 
 // ------------------------------------
 // Scripts Task
