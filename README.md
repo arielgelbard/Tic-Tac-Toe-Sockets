@@ -1,6 +1,6 @@
 #Chatroulette Tic Tac Toe: Read Me
-##By: Ariel Gelbard
-##November 20, 2014
+####By: Ariel Gelbard
+####November 20, 2014
 
 Thanks for downloading and taking an interest in using and looking at my Tic Tac Toe Chat Roulette.
 

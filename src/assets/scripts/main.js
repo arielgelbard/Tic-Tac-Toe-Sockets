@@ -139,7 +139,7 @@ jQuery(function($) {
 
     var postMessge=function(msg){ //post messages to the message box
         document.getElementById('messagePosted').innerHTML = '<p class="messageLine">'+msg+'</p>' + document.getElementById('messagePosted').innerHTML; //append message to the message box
-        document.getElementById('messagePosted').scrollTop = document.getElementById('messagePosted').scrollHeight; //scroll to bottom of the messages box
+        document.getElementById('messagePosted').scrollTop = 0; //scroll to bottom of the messages box
     }
     
     //Tells user if there is a game to play or if there is no opponent
@@ -348,8 +348,9 @@ jQuery(function($) {
     });
 
     //Open Nickname Box Dialog
-    $('#changeNicknameButton').on('click',function(){
-        $('.nicknameArea').slideToggle();
+    $('#nextPlayerButton').on('click',function(){
+        //$('.nicknameArea').slideToggle();
+        socket.emit('nextPlayer');
     });
 
     //Close Messages Area on Start
@@ -364,4 +365,12 @@ jQuery(function($) {
             $('#sendMessage').click();
         }
     });
+
+    socket.on('messageToOpponentReply', function(response){ //when the opponent sends a message
+        postMessge(opponentUsername + ': ' + response);  //tell the user the opponents message
+    }); 
+    
+    socket.on('addToAlreadyPlayedList', function(user){ //when the opponent sends a message
+        socket.emit('initAddToAlreadyPlayedList',user);
+    });       
 });

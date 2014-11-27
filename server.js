@@ -31,6 +31,7 @@ io.on('connection', function(socketer){ //when a user connects with the server
 	usernames.push([socketer.id, 'guest' + guest]); //add standard username to list
 	io.to(socketer.id).emit('customUserNameRequestedSucess','guest'+guest);	
 	guest = guest + 1; //append guest count variable to create new username
+	var alreadyPlayedUsersList=[]; //list of users that they faced already
 
 	//this function passes a userid in and tells the user if they have to wait or if they can begin playing
 	function enableGameForPlayers(userSent){
@@ -52,6 +53,8 @@ io.on('connection', function(socketer){ //when a user connects with the server
 						io.to(gameRoom[1]).emit('questionStartYet', findUserId(userSent), false); //tell user game has began
 						io.to(userSent).emit('questionStartYet', findUserId(gameRoom[1]), true); //tell user game has began
 					}
+						io.to(gameRoom[1]).emit('addToAlreadyPlayedList', findUserId(userSent)); //tell user game has began
+						io.to(userSent).emit('addToAlreadyPlayedList', findUserId(gameRoom[1])); //tell user game has began					
 				}
 			}
 	  	}
@@ -94,7 +97,7 @@ io.on('connection', function(socketer){ //when a user connects with the server
 						io.to(opponent).emit('questionStartYet', false, false); //tell other player that the user left and disable game board
 					}		
 				}
-			  	removeUserFromGame(socketer.id); //remove the player from the game room				
+			  	removeUserFromGame(socketer.id,[]); //remove the player from the game room				
 				enableGameForPlayers(opponent); //determine if other player has been moved to another room and can begin playing
 			} 
 	  	}
@@ -105,6 +108,84 @@ io.on('connection', function(socketer){ //when a user connects with the server
 	  			break; //exit for loop
 	  		}
 	  	}
+	});
+
+	//when user clicks next button
+	socketer.on('nextPlayer', function() { //when a user leaves the page for any reason. Procedure goes as follows: user 0 disconnects, 0 is removed from game room, user 1 is told and has controls disabled
+		console.log('\n\nnextPlayerInitiated');
+		// console.log('USER THAT CLICKED IT:'+alreadyPlayedUsersList);
+		// var opponent='';
+		// for (var i in games){ //go through the rooms
+		// 	var br=false;
+		// 	var room=games[i];
+		// 	var user = room.indexOf(socketer.id); //get the position in the game room
+		// 	if (user !== -1){ //if the user exists in the game room
+		// 		alreadyPlayedUsersList.push(room[0]);
+		// 		var transferSucess=false;
+		// 		var userInGameRoom=room[user];
+		// 		for (var i in games){ //go through the rooms
+		// 			var room2=games[i];
+		// 			if (room2.length==1 && alreadyPlayedUsersList.indexOf(room2[0]) == -1){
+		// 				room.splice(user, 1);
+		// 				console.log("TRANSFER TRUE");
+		// 				// if (room2.length==0){
+		// 				// 	games.splice(i,1);
+		// 				// }
+		// 				room2.push(userInGameRoom);
+		// 				io.to(room[0]).emit('addToAlreadyPlayedList', userInGameRoom); //tell other player that the user left and disable game board			
+
+		// 				io.to(userInGameRoom).emit('questionStartYet', false, false); //tell other player that the user left and disable game board
+		// 				io.to(room[0]).emit('questionStartYet', false, false); //tell other player that the user left and disable game board			
+		// 				enableGameForPlayers(userInGameRoom);
+		// 				br=true;
+		// 				transferSucess=true;
+		// 				break;
+		// 			}
+
+		// 		}
+		// 		if (transferSucess==false){
+		// 			games.push([userInGameRoom]);
+		// 			console.log("TRANSFER FALSE");
+		// 				// if (room.length==0){
+		// 					// games.splice(room,1);
+		// 				// }
+		// 			io.to(room[0]).emit('addToAlreadyPlayedList', userInGameRoom); //tell other player that the user left and disable game board			
+
+		// 			room.splice(user, 1);
+		// 			io.to(room[0]).emit('questionStartYet', false, false); //tell other player that the user left and disable game board
+		// 			io.to(room[0]).emit('questionStartYet', false, false); //tell other player that the user left and disable game board
+		// 			br=true;
+		// 		}
+				
+		// 	}	
+		// 	if (br===true){
+		// 		break;				
+		// 	}
+		// }
+		console.log('\n\nnextPlayerCOMPLETED');
+		checkStatus();
+				//This Part Here is only for Users who have moved around to another game room
+		// 		if (games.length !== 0){ //if there is more then 1 user in a game room still
+		// 			var gameRoom = games[i]; //reference the game room that the user was found in
+		// 			if(gameRoom !== undefined){ //if the game room still exists
+		// 				if (user === 0){ //if the user that left had a position of 0 in the game room
+		// 					opponent=gameRoom[1]; //assign opponent to send off
+		// 				}
+		// 				else if (user === 1){ //if the user that left had a position of 1 in the game room
+		// 					opponent=gameRoom[0]; //assign opponent to send off
+		// 				}
+		// 			}
+		// 		}
+				
+		// 	  	removeUserFromGame(socketer.id, alreadyPlayedUsersList); //remove the player from the game room				
+		// 		enableGameForPlayers(opponent); //determine if other player has been moved to another room and can begin playing
+		// 	} 
+	 //  	}
+	});
+
+	socketer.on('initAddToAlreadyPlayedList', function(user) {
+		// alreadyPlayedUsersList.push(user);
+		console.log(alreadyPlayedUsersList);
 	});
 
 	//When the client requests a new username
@@ -203,7 +284,8 @@ function connectEachOther(){
 	for (var i in games){ //go through the rooms
 		if (games[i].length !== 2){ //if a game room doesn't contain two players
 			for (var i2 in games){ //go through the rooms again
-				if (games[i2].length !== 2 && i !== i2){ //if the game room doesn't contain two players and is not the same empty game room as before
+				var player = games[i]; //
+				if (games[i2].length !== 2 && i !== i2){ //if the game room doesn't contain two players and is not the same empty game room as before and if the player hasnt played them before
 					breakLoop = true; //enable the outside for loop to exit
 					games[i].push(games[i2][0]); //put the user in the second game room into the first game room
 					games.splice(i2, 1); //delete the other game room
