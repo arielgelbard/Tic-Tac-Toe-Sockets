@@ -59,7 +59,7 @@ jQuery(function($) {
             for (var i = 0; i<tiles.length; i++) { //go through each tile
                     tiles[i].style.width = 140 + 'px'; //adjust tiles width
                     tiles[i].style.height = 140 + 'px'; //adjust tiles height
-                    tiles[i].style.lineHeight = 180 + 'px'; //adjust tiles line height
+                    tiles[i].style.lineHeight = 120 + 'px'; //adjust tiles line height
             }
             boardBackground.style.width = 490 + 'px'; //adjust width and height of the boards background
         }
@@ -119,11 +119,6 @@ jQuery(function($) {
 
     //Reset Tic Tac Toe Board
     function resetBoard () {
-        // document.getElementById('status').style.cursor = 'auto'; //reset cursor on status bar
-        // document.getElementById('status').innerText = 'BEGIN!'; //reset actual status text
-        // document.getElementById('status').onclick = ''; //disable click functionality
-        // document.getElementById('status').style.pointer = 'default'; //make pointer regualr again
-        // document.getElementById('status').style.color = 'black'; //change color back to black
         var tiles = document.getElementsByTagName('li'); //reference all tiles
         var templateTile = new gTile(); //establishes new tile to grab attributes from
         for (var i=0; i<tiles.length; i++){ //loop through all tiles and reset
@@ -182,8 +177,6 @@ jQuery(function($) {
     // var gameBeganWithX = true; //holds value of true saying x started with player 1
     var x = []; //What Spots X has chosen during the game
     var o = []; //What Spots O has chosen during the game
-    // var xScore = 0; //X's Current Score
-    // var oScore = 0; //O's Current Score
     var myUsername; //puts this clients username in variable
     var opponentUsername; //puts opponents name in variable
     var whosX = 0; //determines who is x
@@ -317,6 +310,9 @@ jQuery(function($) {
         $('.opponent').val(response);
     });
 
+    //Open Nickname Area on start to let the user change there name right away
+    $('.nicknameArea').slideToggle(0);
+
     socket.on('customUserNameRequestedSucess', function(response){ //server tells client that username change was sucessful
         postMessge('Your name is: ' + response); //tell the user that there username has been switched
         $('.nicknameArea').slideToggle();
@@ -341,28 +337,40 @@ jQuery(function($) {
         postMessge(opponentUsername + ': ' + response);  //tell the user the opponents message
     });
 
-    //Open Send Message Box Dialog
-    $('#sendMessageButton').on('click',function(){
-        $('.sendMessageArea').slideToggle();
-        $('.score').slideToggle();
-    });
+    var enterKeyValueFocusOnField=''; //if the enter key on the keyboard is clicked, holds which text field value is in focus
 
+<<<<<<< HEAD
     //Open Nickname Box Dialog
     $('#nextPlayerButton').on('click',function(){
         //$('.nicknameArea').slideToggle();
         socket.emit('nextPlayer');
+=======
+    $('#message').focusin(function(){ //if the message input box is has been focused
+        enterKeyValueFocusOnField='message'; //assign this field to click if the enter key is clicked on the keyboard
+>>>>>>> master
     });
-
-    //Close Messages Area on Start
-    $('.sendMessageArea').slideToggle();
-
-    //Open Nickname Area on start to let the user change there name right away
-    $('.nicknameArea').slideToggle();
-
-    //If a user hits the enter button anytime from there keyboard, it will easily send the message instead of clicking the send button
-    $(document).keypress(function(e) {
-        if(e.which == 13) {
-            $('#sendMessage').click();
+    
+    $('#message').focusout(function(){ //if the message input box becomes out of focus
+        enterKeyValueFocusOnField=''; //clear the enter key
+    });
+    
+    $('#desiredUserName').focusin(function(){ //if the message input box is has been focused
+        enterKeyValueFocusOnField='desiredUserName'; //assign this field to click if the enter key is clicked on the keyboard
+    });
+    
+    $('#desiredUserName').focusout(function(){ //if the message input box becomes out of focus
+        enterKeyValueFocusOnField=''; //clear the enter key
+    });
+   
+    $(document).keypress(function(e) { //If a user hits the enter button anytime from there keyboard, it will easily send the message instead of clicking the send button
+        if(e.which == 13) { //if the enter key is clicked
+            if (enterKeyValueFocusOnField == 'message') { //if the message box is in focus
+                $('#sendMessage').click(); //send a click event to the send message button
+            }
+            else if (enterKeyValueFocusOnField == 'desiredUserName') { //if the desired username is in focus
+                $('#requestName').click(); //send a click event to the request username button
+                $('desiredUserName').focusout(); //remove focus on the input field
+            }
         }
     });
 

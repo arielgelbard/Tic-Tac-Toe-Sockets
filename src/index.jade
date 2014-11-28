@@ -28,16 +28,18 @@ html
     //- Tic Tac Toe Options
   //- h6(id="options")
   div.options
+<<<<<<< HEAD
     a(href="#" id="sendMessageButton") Send Message
     a(href="#" id="nextPlayerButton") Next Player
     //- //-Change Nickname Area
+=======
+    input.textbox(type='text' id='message' placeholder='Message')
+    a(href="#" id="sendMessage") Send Message
+  //-Change Nickname Area
+>>>>>>> master
   div.nicknameArea
     input.textbox(type='text' id='desiredUserName' placeholder='Enter Nickname')
-    button.button(id="requestName") Request Username
-  div.sendMessageArea
-    //- Send Messages Input Area
-    input.textbox(type='text' id='message' placeholder='Message')
-    button.button(id="sendMessage") Send Message
+    a.button(id="requestName") Request Nickname
   //- Where Messages are Displayed
   div(id='messagePosted')
 
