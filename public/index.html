@@ -22,15 +22,11 @@
     </div>
     <hr>
   </div>
-  <div class="options"><a href="#" id="sendMessageButton">Send Message</a><a href="#" id="changeNicknameButton">Change Nickname</a>
+  <div class="options">
+    <input type="text" id="message" placeholder="Message" class="textbox"><a href="#" id="sendMessage">Send Message</a>
   </div>
   <div class="nicknameArea">
-    <input type="text" id="desiredUserName" placeholder="Enter Nickname" class="textbox">
-    <button id="requestName" class="button">Request Username</button>
-  </div>
-  <div class="sendMessageArea">
-    <input type="text" id="message" placeholder="Message" class="textbox">
-    <button id="sendMessage" class="button">Send Message</button>
+    <input type="text" id="desiredUserName" placeholder="Enter Nickname" class="textbox"><a id="requestName" class="button">Request Nickname</a>
   </div>
   <div id="messagePosted"></div>
   <link rel="stylesheet" type="text/css" href="assets/styles/reset.css">

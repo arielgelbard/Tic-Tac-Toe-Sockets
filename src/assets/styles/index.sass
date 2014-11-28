@@ -80,12 +80,14 @@
 }
 
 //Send Message and Change Nickname Buttons
-.options{
-	width:100%;
+.options,.nicknameArea{
+	width:47%;
 	margin-top: 10px;
 	font-family: Arial;
 	font-weight: bold;
 	text-transform: uppercase;
+	display:inline-block;
+	margin-left: 2%;
 	a{
 		display:inline-block;
 		text-align: center;
@@ -95,14 +97,7 @@
 		padding: 10px 0;
 		margin-left: 2.5%;
 		text-decoration:none;
-
 	}
-}
-
-//Nickname and Send Message Dialog Box
-.nicknameArea,.sendMessageArea{
-	width:100%;
-	margin-top:10px;
 	input{
 		width: 45%;
 		font-size: 16px;
@@ -111,31 +106,26 @@
 		margin-left: 2.3%;
 		font-family: Arial;
 		font-weight: bold;
-		text-transform: uppercase;
 	}
-	button{
-		width: 45%;
-		padding:10px 0;
-		border:none;
-		font-size: 16px;
-		margin-left: 1.5%;
-		font-family: Arial;
-		font-weight: bold;
-		text-transform: uppercase;
-		background-color:#34495e;
-		color: white;
-		
+}
 
+//Adjust Input Areas Accordingly
+@media screen and (max-width: 800px) {
+	.options,.nicknameArea{
+		display: block;
+		width: 90%;
+		margin-left: 5%;
 	}
 }
 
 //Posted Messages Area for the user to see updates and messages
 #messagePosted{
-	margin-top:10px;
+	margin:10px 0;
 	border: 1px black solid;
 	height:100px;
 	width:95%;
 	margin-left:2.5%;
+	overflow:auto;
 	p{
 		margin: 2%;
 		width: 97%;
